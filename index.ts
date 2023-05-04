@@ -1,4 +1,12 @@
-const cn = (...args: any): string => {
+type Args =
+  | null
+  | string
+  | number
+  | boolean
+  | Record<string, boolean | string | null>
+  | Args[]
+
+const cn = (...args: Args[]): string => {
   let resultString: string = ''
 
   for (let currentArgument of args) {
