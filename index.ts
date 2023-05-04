@@ -21,12 +21,13 @@ const cn = (...args: Args[]): string => {
       currentArgument !== null &&
       !Array.isArray(currentArgument)
     ) {
-      for (let objectKey of Object.keys(currentArgument)) {
+      for (let objectKey in currentArgument) {
         if (!currentArgument[objectKey]) continue
 
         resultString += `${resultString === '' ? '' : ' '}${objectKey}`
       }
     }
+
     if (Array.isArray(currentArgument)) {
       for (let arrayElement of currentArgument) {
         if (!arrayElement) continue
@@ -42,3 +43,33 @@ const cn = (...args: Args[]): string => {
 
   return resultString
 }
+
+// Strings (variadic)
+console.log(cn('foo', true && 'bar', 'baz'))
+//=> 'foo bar baz'
+
+// Objects
+console.log(cn({ foo: true, bar: false, baz: true }))
+//=> 'foo baz'
+
+// Objects (variadic)
+console.log(cn({ foo: true }, { bar: false }, null, { '--foobar': 'hello' }))
+//=> 'foo --foobar'
+
+// Arrays
+console.log(cn(['foo', 0, false, 'bar']))
+//=> 'foo bar'
+
+// Arrays (variadic)
+console.log(cn(['foo'], ['', 0, false, 'bar'], [['baz', [['hello'], 'there']]]))
+//=> 'foo bar baz hello there'
+
+// Kitchen sink (with nesting)
+console.log(
+  cn(
+    'foo',
+    [1 && 'bar', { baz: false, bat: null }, ['hello', ['world']]],
+    'cya'
+  )
+)
+//=> 'foo bar hello world cya'
